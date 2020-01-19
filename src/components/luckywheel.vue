@@ -27,7 +27,7 @@
             >
               <div class="prize-pic">
                 <div class="prize-type">{{item.name}}</div>
-                <img :src="item.icon" />
+                <img :src="item.icon" style='width:33px;height:33px'/>
               </div>
             </div>
           </div>
@@ -132,6 +132,7 @@ export default {
       backImg: backImg,
       loadingImg:loadingImg,
       dm: [],
+      //host: "http://newtestuser.smaoxs.com",
       host: "http://user.smaoxs.com",
       endFlag: true,
       count: 100, // 剩余抽奖次数
@@ -142,7 +143,8 @@ export default {
       prize: null,
       havenot: false,
       goodsList: [], //获奖记录
-      token: "",
+      token: "o9fZyMJ068NNOLTYfRy/o60RP7o=",
+       //token:"VuNpshQD980E987kna2b963xA17pOz0298IPVh0t9unwnf7kOfKksbnmRTGbikQys6pNlYnmnadIRHqt0891ljJGRjD6-j0k0SvboYNGOH5Clf3uOTnmnv5UlhNWi8DboYNCO6xkObnmnaQf7TxyR1kUKqGWlA5f9MKq967RTbxl-hQ5OqdWqdv3nbGb78kvna2bRt5fRjRuRa9yR8Du0S0k9jvC0akp9fdylj9C0SkbRtgbPD==",
       loginStatus: null,
       activityId: 1,
       jpName: "",
@@ -341,9 +343,11 @@ export default {
               that.appPackage = "快小说免费阅读器";
             }
             if (JSON.parse(data).pub_parm.lastWatchVideoTime > that.nowTime) {
-              that.video = true;
-            }
+               that.video = true;
             that.checkLogin();
+            }else{ that.video = false;
+            that.checkLogin();
+            }
           }
         );
       } else {
@@ -362,13 +366,17 @@ export default {
             }
             if (JSON.parse(data).lastWatchVideoTime > that.nowTime) {
               that.video = true;
-            }
             that.checkLogin();
+            }else{
+               that.video = false;
+            that.checkLogin();
+            }
           }
         );
       }
     }, 0);
 
+            that.checkLogin();
     setTimeout(()=>{
       if(that.token==''){
 
@@ -660,7 +668,8 @@ export default {
           setTimeout(() => {
             this.getList();
           }, 15000);
-          axios({
+          if(this.loginValid){
+            axios({
             method: "get",
             url: this.host + "/api/v1/activity/turnplate/record",
             params: {},
@@ -669,6 +678,7 @@ export default {
           }).then(res => {
             this.goodsList = res.data.data;
           });
+          }
         }
       });
     },
